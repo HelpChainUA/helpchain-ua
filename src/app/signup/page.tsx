@@ -24,6 +24,11 @@ export default function RegisterPage() {
     setError("");
     console.log("Submitting registration:", { email, password });
 
+    if (passwordConfirmed !== password) {
+      setError("Passwords don't match.");
+      return;
+    }
+
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -45,6 +50,9 @@ export default function RegisterPage() {
   const handleShowPasswordConfirmed = () => {
     setShowPasswordConfirmed((prev) => !prev);
   };
+
+  const isFormValid =
+    email && password && passwordConfirmed && password === passwordConfirmed;
 
   return (
     <div className="flex flex-col py-12 px-4 items-center justify-center bg-primary-50">
@@ -74,7 +82,7 @@ export default function RegisterPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input"
             />
           </div>
 
@@ -88,7 +96,7 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border font-karla font-medium text-base text-gray-500 border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg font-karla font-medium text-base text-gray-500 border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input"
               />
               <button
                 type="button"
@@ -113,7 +121,7 @@ export default function RegisterPage() {
                 required
                 value={passwordConfirmed}
                 onChange={(e) => setPasswordConfirmed(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-lg font-karla font-medium text-base text-gray-500 border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input"
               />
               <button
                 type="button"
@@ -158,7 +166,10 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          className="w-full h-[46px] rounded-md bg-primary-500 py-2.5 px-3 font-karla font-bold text-white hover:bg-blue-700 transition"
+          // disabled={!isFormValid}
+          className={`w-full h-[46px] rounded-md bg-primary-500 py-2.5 px-3 font-karla font-bold text-white transition
+           
+          `}
         >
           Create Account
         </button>
@@ -167,7 +178,7 @@ export default function RegisterPage() {
           <button
             type="button"
             // onClick={() => signIn("google")}
-            className="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-3 text-gray-700 hover:bg-gray-50"
+            className="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-3 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-200 focus:bg-white focus:shadow-social-button"
           >
             <div className="flex justify-center gap-3">
               <div>{googleIcon}</div>
@@ -177,7 +188,7 @@ export default function RegisterPage() {
           <button
             type="button"
             // onClick={() => signIn("facebook")}
-            className="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-3 text-gray-700 hover:bg-gray-50"
+            className="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-3 text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-3 focus:ring-gray-200 focus:bg-white focus:shadow-social-button"
           >
             <div className="flex justify-center gap-3">
               <div>{facebookIcon}</div>
