@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { name, email, password } = await req.json();
+  const { email, password } = await req.json();
 
   if (!email || !password) {
     return NextResponse.json({ message: 'Email and password are required' }, { status: 400 });
@@ -19,7 +19,6 @@ export async function POST(req: Request) {
 
   const user = await prisma.user.create({
     data: {
-      name,
       email,
       password: hashedPassword,
       onboardingStep: 4, // Assuming the user starts at step 4 after registration
