@@ -51,7 +51,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex flex-col py-12 px-4 items-center justify-center bg-primary-50">
+    <div className="flex flex-col py-20 px-4 items-center justify-center bg-primary-50">
       <div className="flex flex-col gap-4 pb-12">
         <h1 className="text-2xl font-extrabold font-montserrat text-center tracking-[0.1em]">
           Create Your Account
@@ -78,7 +78,7 @@ export default function RegisterPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input"
+              className="w-full rounded-lg border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input focus:border-primary-300"
             />
           </div>
 
@@ -92,7 +92,7 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg font-karla font-medium text-base text-gray-500 border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input"
+                className="w-full rounded-lg font-karla font-medium text-base text-gray-500 border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input focus:border-primary-300"
               />
               <button
                 type="button"
@@ -117,7 +117,7 @@ export default function RegisterPage() {
                 required
                 value={passwordConfirmed}
                 onChange={(e) => setPasswordConfirmed(e.target.value)}
-                className="w-full rounded-lg font-karla font-medium text-base text-gray-500 border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input"
+                className="w-full rounded-lg font-karla font-medium text-base text-gray-500 border border-gray-300 px-4 py-3 bg-white focus:outline-none focus:ring-3 focus:ring-primary-100 focus:shadow-input focus:border-primary-300"
               />
               <button
                 type="button"
@@ -162,7 +162,7 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          className="w-full h-[46px] rounded-md bg-primary-500 py-2.5 px-3 font-karla font-bold text-white transition"
+          className="w-full h-[46px] rounded-md bg-primary-500 py-2.5 px-3 font-karla font-bold text-white transition hover:bg-primary-700"
         >
           Create Account
         </button>

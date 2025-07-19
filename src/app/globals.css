@@ -80,6 +80,7 @@ body {
   --color-brand-primary: #4A3AFF;
 
   /* ==== FEEDBACK ==== */
+  --color-error-100:   #FEE4E2;
   --color-error-500:   #F04438;
   --color-warning-500: #F79009;
   --color-success-500: #12B76A;
@@ -91,6 +92,8 @@ body {
   /* ==== SHADOWS ==== */
   --shadow-social-button: 0px 0px 0px 4px #F2F4F7, 0px 1px 2px 0px #1018280D;
   --shadow-input: 0px 0px 0px 4px #DEEBEF;
+  --shadow-error-outline: 0px 0px 0px 4px #FEE4E2;
+  --shadow-error-sm: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
 }
 

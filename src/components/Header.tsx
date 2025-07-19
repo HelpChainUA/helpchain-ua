@@ -11,8 +11,8 @@ import { logoDark } from "@/icons/LogoDark";
 import { logoLight } from "@/icons/LogoLight";
 
 import { useState, useRef, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { UserData } from "@/types/user";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
@@ -21,12 +21,14 @@ export default function Header() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileDropdown, setShowMobileDropdown] = useState(false);
   const [selectedLang, setSelectedLang] = useState("en");
-  const [user, setUser] = useState<UserData | null>(null);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mobileDropdownRef = useRef<HTMLDivElement>(null);
 
   const router = useRouter();
+
+  const { data: session, status } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -62,19 +64,6 @@ export default function Header() {
       document.body.style.overflow = "auto"; // Cleanup in case component unmounts
     };
   }, [isMenuOpen]);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await fetch("/api/profiles/job-seeker");
-        const data: UserData = await response.json();
-        setUser(data);
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-      }
-    };
-    fetchUser();
-  }, []);
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -188,18 +177,18 @@ export default function Header() {
 
       {/* =======> Desktop container: visible above 1024px <======= */}
       <div
-        className={`flex justify-center ${user?.isLoggedIn ? "bg-white" : ""}`}
+        className={`flex justify-center ${status === "authenticated" ? "bg-white" : ""}`}
       >
         <div className="hidden lg:block px-10 py-7 xl:w-6xl 2xl:w-7xl">
           <nav className="flex justify-between items-center max-w-[1200px] h-[52px] lg:gap-x-12 2xl:w-1200px">
             <div className="flex items-center lg:gap-x-7">
               {/* change logo color based on auth user */}
               <Link href="/" aria-label="Go to homepage">
-                {user?.isLoggedIn ? logoDark : logoLight}
+                {status === "authenticated" ? logoDark : logoLight}
               </Link>
               <ul
                 className={`flex items-center gap-4 h-[48px] font-karla font-bold ${
-                  user?.isLoggedIn ? "text-primary-500" : "text-white"
+                  status === "authenticated" ? "text-primary-500" : "text-white"
                 }`}
               >
                 <li className="cursor-pointer px-[10px] py-[10px]">
@@ -263,17 +252,14 @@ export default function Header() {
                   </div>
                 )}
               </div>
-              {user?.isLoggedIn &&
-              user?.onboardingStep &&
-              Number(user.onboardingStep) > 10 ? (
+              {status === "authenticated" ? (
                 <div className="flex gap-8">
                   <button
                     className="cursor-pointer font-karla font-bold text-primary-500 text-base"
                     onClick={handleUserNameClick}
                   >
                     <div className="flex gap-2 items-center">
-                      {user?.firstName} {user?.lastName}
-                      {dropDownIcon}
+                      {user?.email}{dropDownIcon}
                     </div>
                   </button>
                   <button
