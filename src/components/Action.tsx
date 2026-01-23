@@ -8,12 +8,15 @@ export default function Action() {
           Take the Next Step Today
         </h2>
         <p className="text-4 font-karla text-white">
-          Join us in connecting skilled Ukrainians with rewarding opportunities
-          in the UK job market.
+          Whether you are looking for a job, offering employment, or want to
+          support our initiative, we connect people to the right resources.
         </p>
-        <button className="font-karla bg-accent-400 hover:bg-accent-600 sm:w-[261px] h-[44px] text-white font-semibold py-2 pr-5 pl-6 rounded-lg transition duration-200 cursor-pointer">
+        <p className="text-4 font-karla text-white">
+          Join us for finding your best match.
+        </p>
+        <button className="font-karla bg-accent-400 hover:bg-accent-600 w-[150px] h-[44px] text-white font-semibold py-2 pr-5 pl-6 rounded-lg transition duration-200 cursor-pointer">
           <div className="flex items-center justify-center gap-2">
-            <p>Register your interest</p>
+            <p>Join us</p>
             <ArrowRight className="w-4 h-4" />
           </div>
         </button>
