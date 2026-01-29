@@ -10,11 +10,11 @@ import { linkedin } from "@/icons/Linkedin";
 import Link from "next/link";
 
 const usefulLinks = [
-  { name: "Contact Us", href: "/contact-us", },
-  { name: "About Us", href: "/some-where", },
-  { name: "Careers", href: "/some-where", },
-  { name: "Blog Posts", href: "/some-where", },
-  { name: "Support Center", href: "/some-where", },
+  { name: "Contact Us", href: "/contact-us" },
+  { name: "About Us", href: "/some-where" },
+  { name: "Careers", href: "/some-where" },
+  { name: "Blog Posts", href: "/some-where" },
+  { name: "Support Center", href: "/some-where" },
 ];
 
 const connectWithUs = [
@@ -51,7 +51,6 @@ const socialLinks = [
 export default function Footer() {
   return (
     <section className="text-white font-roboto">
-      
       {/* Desktop Layout (xl and up) */}
       <div className="hidden xl:flex justify-center">
         <div className="flex flex-col gap-20 bg-primary-800 w-full py-10 px-48 xl:px-20">

@@ -78,7 +78,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white lg:bg-primary-600">
+    <header className="bg-white">
       {/* =======> Mobile menu <======= */}
       {isMenuOpen && (
         <div className="fixed top-0 left-0 w-full h-full z-25 bg-gray-350 lg:hidden">
@@ -92,23 +92,28 @@ export default function Header() {
             <div className="flex flex-col items-center">
               <ul className="flex flex-col items-center font-karla font-bold text-primary-500">
                 <li className="cursor-pointer p-4 active:text-primary-700">
-                  Find a job
+                  Projects
                 </li>
                 <li className="cursor-pointer p-4 active:text-primary-700">
-                  Hire Talent
+                   About Us
+                </li>
+                <li className="cursor-pointer p-4 active:text-primary-700">
+                  Events
                 </li>
                 <li className="cursor-pointer p-4 active:text-primary-700">
                   Projects
                 </li>
                 <li className="cursor-pointer p-4 active:text-primary-700">
-                  <Link href="/contact-us" onClick={() => setIsMenuOpen(false)}>Contact</Link>
+                  <Link href="/contact-us" onClick={() => setIsMenuOpen(false)}>
+                    Contact
+                  </Link>
                 </li>
               </ul>
             </div>
 
             {/* ======= Dropdown language button ======= */}
             <div className="flex flex-col gap-2" ref={mobileDropdownRef}>
-              <button
+              {/* <button
                 onClick={() => setShowMobileDropdown((prev) => !prev)}
                 className={`flex items-center p-2.5 min-w-52 h-11 bg-white rounded-md active:bg-gray-50 ${
                   showMobileDropdown
@@ -121,7 +126,7 @@ export default function Header() {
                   {selectedLang === "en" ? "En" : "Укр"}
                 </div>
                 {showMobileDropdown ? <UpArrowIcon /> : <DownArrowIcon />}
-              </button>
+              </button> */}
 
               {showMobileDropdown && (
                 <div className="w-56 rounded-md border border-neutral-300 bg-white">
@@ -170,7 +175,7 @@ export default function Header() {
                     onClick={() => setIsMenuOpen(false)}
                     className="cursor-pointer text-primary-500 active:text-primary-700 font-karla font-bold"
                   >
-                    Sign in
+                    Login
                   </Link>
 
                   <button className="cursor-pointer py-2 px-6 bg-accent-400 active:bg-accent-600 rounded-md w-32 h-11 text-lg font-karla font-bold text-white">
@@ -212,11 +217,7 @@ export default function Header() {
       </div>
 
       {/* =======> Tablet & Desktop container: visible from lg (1024px) and up <======= */}
-      <div
-        className={`hidden lg:flex justify-center  ${
-          status === "authenticated" ? "bg-white" : ""
-        }`}
-      >
+      <div className={`hidden lg:flex justify-center bg-white`}>
         <div className="w-full max-w-7xl px-10 py-7">
           <nav className="flex justify-between items-center">
             {/* === Left side: Logo + Nav === */}
@@ -225,14 +226,21 @@ export default function Header() {
                 {status === "authenticated" ? logoDark : logoLight}
               </Link>
               <ul
-                className={`flex items-center gap-4 h-12 font-karla font-bold cursor-pointer ${
-                  status === "authenticated" ? "text-primary-500" : "text-white"
-                }`}
+                className={`flex items-center gap-4 h-12 font-karla font-bold cursor-pointer text-primary-400`}
               >
-                <li className="cursor-pointer p-2.5">Find a job</li>
-                <li className="cursor-pointer p-2.5">Hire Talent</li>
-                <li className="cursor-pointer p-2.5">Projects</li>
-                <li className="cursor-pointer p-2.5">
+                <li className="cursor-pointer p-2.5 hover:text-primary-700">
+                   Projects
+                </li>
+                <li className="cursor-pointer p-2.5 hover:text-primary-700">
+                   About Us
+                </li>
+                <li className="cursor-pointer p-2.5 hover:text-primary-700">
+                  Events
+                </li>
+                <li className="cursor-pointer p-2.5 hover:text-primary-700">
+                  Partners
+                </li>
+                <li className="cursor-pointer p-2.5 hover:text-primary-700">
                   {" "}
                   <Link href="/contact-us">Contact</Link>
                 </li>
@@ -242,7 +250,7 @@ export default function Header() {
             {/* === Right side: Lang + User Actions === */}
             <div className="flex items-center gap-6 h-12 whitespace-nowrap">
               {/* Language Dropdown (always visible on tablet & desktop) */}
-              <div className="relative" ref={dropdownRef}>
+              {/* <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setShowDropdown((prev) => !prev)}
                   className={`cursor-pointer flex items-center p-2.5 w-28 h-12 bg-white hover:bg-gray-50 rounded-md ${
@@ -287,7 +295,7 @@ export default function Header() {
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
 
               {/* === Authenticated user controls === */}
               {status === "authenticated" ? (
@@ -327,7 +335,7 @@ export default function Header() {
               ) : (
                 <>
                   <Link
-                    className="cursor-pointer text-white font-karla font-bold"
+                    className="cursor-pointer text-primary-400 font-karla font-bold"
                     href="/signin"
                   >
                     Login

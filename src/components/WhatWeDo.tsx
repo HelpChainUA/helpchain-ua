@@ -9,36 +9,36 @@ import { ArrowRight } from "lucide-react";
 const cards = [
   {
     title: "Connect",
-    subtitle: "Find jobs in the UK",
+    subtitle: "Connecting people for finding",
     image: "/images/conect.png",
     items: [
-      "AI-powered job matching",
-      "Build CV & interview support point",
-      "Work permit & sponsorship guidance",
+      "a job",
+      "employees or busines partners",
+      "networking opportunities",
     ],
-    button: "Find Jobs",
+    button: "Find best matches",
   },
   {
-    title: "Help",
-    subtitle: "Get UK qualifications",
+    title: "Possibilities",
+    subtitle: "How we do best matches",
     image: "/images/help.png",
     items: [
-      "Training & certification support",
-      "Training & certification support",
-      "English courses for employment",
+      "AI-powered job matching",
+      "BullCV & interview supportet point",
+      "And?",
     ],
-    button: "Explore Training",
+    button: "Explore the possibilities",
   },
   {
-    title: "Support",
-    subtitle: "Start your business",
+    title: "And more",
+    subtitle: "Additional features",
     image: "/images/support.png",
     items: [
-      "Business registration help",
-      "Funding & mentorship",
-      "Networking opportunities",
+      "training & certification",
+      "English courses for employment",
+      "Funding & mentorship programs",
     ],
-    button: "Start Your Business",
+    button: "Develop yourself",
   },
 ];
 

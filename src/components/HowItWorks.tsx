@@ -33,7 +33,7 @@ const steps = [
 ];
 
 export default function HowItWorks() {
-  const [activeTab, setActiveTab] = useState<"find" | "hire">("find");
+  const [activeTab, setActiveTab] = useState<"find" | "hire" | "hire2">("find");
 
   return (
     <section className="bg-primary-50 py-16 px-4 sm:px-6 lg:px-8">
@@ -52,7 +52,7 @@ export default function HowItWorks() {
                 : "text-primary-500 hover:text-primary-800 px-4"
             }`}
           >
-            Find Work
+            For employers
           </button>
           <button
             onClick={() => setActiveTab("hire")}
@@ -62,7 +62,17 @@ export default function HowItWorks() {
                 : "text-primary-500 hover:text-primary-800 px-4"
             }`}
           >
-            Hire Talent
+            For employees
+          </button>
+          <button
+            onClick={() => setActiveTab("hire2")}
+            className={`pb-1 transition ${
+              activeTab === "hire2"
+                ? "text-gray-900 border-b-3 border-accent-500 px-4"
+                : "text-primary-500 hover:text-primary-800 px-4"
+            }`}
+          >
+            Other possibilities
           </button>
         </div>
 
@@ -102,7 +112,7 @@ export default function HowItWorks() {
               </p>
               <Link href="/signup">
                 <button className="bg-accent-400 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
-                  Sign Up Now
+                  Join us now
                 </button>
               </Link>
             </div>
@@ -110,6 +120,11 @@ export default function HowItWorks() {
         )}
 
         {activeTab === "hire" && (
+          <div className="text-gray-500 mt-8">
+            <p>Content for &quot;Hire Talent&quot; will be added soon...</p>
+          </div>
+        )}
+        {activeTab === "hire2" && (
           <div className="text-gray-500 mt-8">
             <p>Content for &quot;Hire Talent&quot; will be added soon...</p>
           </div>
