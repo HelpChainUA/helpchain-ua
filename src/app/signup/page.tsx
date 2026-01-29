@@ -11,7 +11,7 @@ import ProgressBar from "@/components/ProgressBar";
 import OnboardingFooter from "@/components/OnboardingFooter";
 import MainButton from "@/components/ui/MainButton/MainButton";
 import LinkButton from "@/components/ui/LinkButton/LinkButton";
-
+import ErrorMessage from "@/components/ui/ErrorMessage";
 export default function RegisterPage() {
   const router = useRouter();
 
@@ -77,13 +77,13 @@ export default function RegisterPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-    
+
     if (res.status === 201) {
-      const data = await res.json(); 
-      const userId = data.userId; 
+      const data = await res.json();
+      const userId = data.userId;
       router.push(`/email-verification?userId=${userId}`);
     } else {
-      const data = await res.json(); 
+      const data = await res.json();
       setError(data.message || "Something went wrong");
       setLoading(false);
     }
@@ -124,6 +124,22 @@ export default function RegisterPage() {
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 max-w-xl"
         >
+          <ErrorMessage
+            innerBtnText="Error"
+            innerBtnBgColour="bg-red-50"
+            innerBtnTextColour="text-red-700"
+            errorMessageText="There was a problem with that action"
+            backgroundColour="bg-red-100"
+            arrow={true}
+          />
+          <ErrorMessage
+            innerBtnText="Fix now"
+            innerBtnBgColour="bg-red-50"
+            innerBtnTextColour="text-red-700"
+            errorMessageText="There was a problem with that action"
+            backgroundColour="bg-red-100"
+            arrow={true}
+          />
           {error && (
             <p className="rounded-md bg-red-100 p-2 text-center text-error-500">
               {error}
