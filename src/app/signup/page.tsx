@@ -72,18 +72,21 @@ export default function RegisterPage() {
       return;
     }
 
+    // Get selected role from localStorage
+    const selectedRole = localStorage.getItem("selectedRole") || "JOB_SEEKER";
+
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, role: selectedRole }),
     });
-    
+
     if (res.status === 201) {
-      const data = await res.json(); 
-      const userId = data.userId; 
+      const data = await res.json();
+      const userId = data.userId;
       router.push(`/email-verification?userId=${userId}`);
     } else {
-      const data = await res.json(); 
+      const data = await res.json();
       setError(data.message || "Something went wrong");
       setLoading(false);
     }
@@ -148,11 +151,11 @@ export default function RegisterPage() {
                 emailTouched && !email && !emailFocused
                   ? "Required field." // shows error only when blurred and empty
                   : emailTouched &&
-                    email &&
-                    !validator.isEmail(email) &&
-                    !emailFocused
-                  ? "Invalid email format."
-                  : undefined
+                      email &&
+                      !validator.isEmail(email) &&
+                      !emailFocused
+                    ? "Invalid email format."
+                    : undefined
               }
             />
 
@@ -173,8 +176,8 @@ export default function RegisterPage() {
                 passwordTouched && !password && !passwordFocused
                   ? "Required field."
                   : passwordTouched && passwordError && !passwordFocused
-                  ? passwordError
-                  : undefined
+                    ? passwordError
+                    : undefined
               }
               helperText="Enter a secure password: at least 8 characters, including upper-case and lower-case letters, numbers and special characters."
               showIconButton
@@ -201,11 +204,11 @@ export default function RegisterPage() {
                 !passwordConfirmedFocused
                   ? "Required field."
                   : passwordConfirmedTouched &&
-                    passwordConfirmed &&
-                    !passwordConfirmedFocused &&
-                    password !== passwordConfirmed
-                  ? "Passwords do not match."
-                  : undefined
+                      passwordConfirmed &&
+                      !passwordConfirmedFocused &&
+                      password !== passwordConfirmed
+                    ? "Passwords do not match."
+                    : undefined
               }
               helperText="Make sure it matches your password above."
               showIconButton

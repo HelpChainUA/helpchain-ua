@@ -8,6 +8,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  JOB_SEEKER
+  EMPLOYER
+  PARTNER
+}
+
+enum HousingAssistance {
+  YES
+  NO
+  POSSIBLE
+}
+
 model Language {
   id       Int    @id @default(autoincrement())
   name     String
@@ -47,6 +59,10 @@ model User {
   emailVerificationToken String?   @unique
   emailVerificationExpiry DateTime?
 
+  // User role
+  role               UserRole?
+  phoneNumber        String?
+
   // Profile fields
   firstName          String?
   lastName           String?
@@ -66,6 +82,7 @@ model User {
   sessions           Session[]
   cvs                Cv[]
   languages          UserLangLevel[]
+  company            Company?
 }
 
 model Account {
@@ -111,3 +128,108 @@ model Cv {
   fileUrl   String   // link to file (can be local or S3)
   createdAt DateTime @default(now())
 }
+
+model Company {
+  id                      String   @id @default(cuid())
+  userId                  Int      @unique
+  user                    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  companyName             String
+  companyWebsite          String?
+  companyLinkedIn         String?
+  
+  companySizeId           String?
+  companySize             CompanySize? @relation(fields: [companySizeId], references: [id])
+  
+  industries              CompanyIndustry[]
+  locations               CompanyLocation[]
+  jobs                    Job[]
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+}
+
+model Industry {
+  id                String              @id @default(cuid())
+  name              String              @unique
+  companies         CompanyIndustry[]
+}
+
+model CompanyIndustry {
+  companyId         String
+  industryId        String
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  industry          Industry @relation(fields: [industryId], references: [id], onDelete: Cascade)
+  
+  @@id([companyId, industryId])
+}
+
+model CompanySize {
+  id                String    @id @default(cuid())
+  name              String    @unique
+  companies         Company[]
+}
+
+model Location {
+  id                String              @id @default(cuid())
+  city              String
+  country           String              @default("United Kingdom")
+  
+  companyLocations  CompanyLocation[]
+  jobs              Job[]
+  
+  @@unique([city, country])
+}
+
+model CompanyLocation {
+  companyId         String
+  locationId        String
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  location          Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  
+  @@id([companyId, locationId])
+}
+
+model JobType {
+  id            String             @id @default(cuid())
+  name          String             @unique // PAID_JOB, INTERNSHIP, VOLUNTEERING
+  displayName   String             // "Paid Job", "Internship", "Volunteering"
+  jobs          JobTypeRelation[]
+  createdAt     DateTime           @default(now())
+}
+
+model JobTypeRelation {
+  jobId     String
+  jobTypeId String
+  job       Job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobType   JobType @relation(fields: [jobTypeId], references: [id], onDelete: Cascade)
+  
+  @@id([jobId, jobTypeId])
+}
+
+model WorkType {
+  id            String   @id @default(cuid())
+  name          String   @unique // FULL_TIME, PART_TIME, FLEXIBLE
+  displayName   String   // "Full-time", "Part-time", "Both / Flexible"
+  jobs          Job[]
+  createdAt     DateTime @default(now())
+}
+
+model Job {
+  id                String   @id @default(cuid())
+  companyId         String
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  
+  title             String
+  types             JobTypeRelation[] // many-to-many
+  
+  locationId        String?
+  location          Location? @relation(fields: [locationId], references: [id])
+  
+  housingAssistance HousingAssistance
+  workTypeId        String?
+  workType          WorkType? @relation(fields: [workTypeId], references: [id]) // one-to-many
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}  

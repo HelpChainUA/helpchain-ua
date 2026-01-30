@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -20,12 +21,14 @@ export default function Hero() {
           <p>For employers and employees</p>
         </div>
 
-        <button className="font-karla bg-accent-400 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
-          <div className="flex items-center justify-center gap-2">
-            <p>Register your interest</p>
-            <ArrowRight className="w-5 h-5" />
-          </div>
-        </button>
+        <Link href="/role-selection">
+          <button className="font-karla bg-accent-400 hover:bg-accent-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-200">
+            <div className="flex items-center justify-center gap-2">
+              <p>Register your interest</p>
+              <ArrowRight className="w-5 h-5" />
+            </div>
+          </button>
+        </Link>
 
         <div className="flex flex-col sm:flex-row justify-center gap-15 pt-10">
           <StatItem number="5000+" label="Pre-Registrations" />
