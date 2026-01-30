@@ -12,13 +12,35 @@ export default async function RedirectAfterAuthPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: parseInt(session.user.id) },
-    select: { onboardingStep: true },
+    select: {
+      onboardingStep: true,
+      role: true,
+    },
   });
 
   if (!user) {
     return redirect("/signin");
   }
 
+  // If user is an EMPLOYER, redirect to employer onboarding
+  if (user.role === "EMPLOYER") {
+    const employerStepToPathMap: Record<number, string> = {
+      4: "/onboarding/employer/company",
+      100: "/", // Completed
+    };
+
+    const onboardingStep = user.onboardingStep;
+
+    if (onboardingStep >= 100) {
+      return redirect("/");
+    }
+
+    const nextPath =
+      employerStepToPathMap[onboardingStep] || "/onboarding/employer/company";
+    return redirect(nextPath);
+  }
+
+  // Default: Job Seeker onboarding
   const stepToPathMap: Record<number, string> = {
     4: "/onboarding/location",
     5: "/onboarding/profile",
