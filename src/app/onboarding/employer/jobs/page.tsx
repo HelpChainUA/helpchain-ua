@@ -8,6 +8,7 @@ import ArrowLeft from "@/icons/ArrowLeft";
 import Input from "@/components/Input";
 import Select from "@/components/Select";
 import Checkbox from "@/components/Checkbox";
+import TooltipIcon from "@/components/TooltipIcon";
 
 interface JobForm {
   title: string;
@@ -205,8 +206,10 @@ export default function EmployerJobsPage() {
 
                 <div>
                   <label className="text-base font-bold text-gray-900 mb-2 block">
-                    What kind of opportunity it is{" "}
-                    <span className="text-red-500">*</span>
+                    <div className="flex gap-1 items-center">
+                      What kind of opportunity it is
+                      <TooltipIcon message="New text" position="left" />
+                    </div>
                   </label>
                   <div className="space-y-2">
                     <Checkbox
@@ -240,8 +243,11 @@ export default function EmployerJobsPage() {
 
                 <div>
                   <label className="text-base font-bold text-gray-900 mb-2 block">
-                    Do you provide housing/relocation assistance for this
-                    position? <span className="text-red-500">*</span>
+                    <div className="flex gap-1 items-center">
+                      Do you provide housing/relocation assistance for this
+                      position?{" "}
+                      <TooltipIcon message="New text" position="left" />
+                    </div>
                   </label>
                   <div className="space-y-2">
                     <Checkbox
@@ -280,7 +286,10 @@ export default function EmployerJobsPage() {
 
                 <div>
                   <label className="text-base font-bold text-gray-900 mb-2 block">
-                    Type <span className="text-red-500">*</span>
+                    <div className="flex gap-1 items-center">
+                      Type
+                      <TooltipIcon message="New text" position="right" />
+                    </div>
                   </label>
                   <div className="space-y-2">
                     {workTypes.map((workType) => (
