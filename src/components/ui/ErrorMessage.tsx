@@ -30,7 +30,9 @@ export default function ErrorMessage({
           className={`flex justify-center gap-2 align-middle`}
         >
           {innerBtnText == "Fix now" ? (
-            <button className={`${classes} cursor-pointer`}>
+            <button
+              className={`${classes} cursor-pointer text-center flex justify-center`}
+            >
               {innerBtnText}
               {innerBtnText === "Fix now" && arrow && (
                 <span className="text-red-600 text-md">&#8594;</span>

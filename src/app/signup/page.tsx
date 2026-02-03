@@ -32,6 +32,7 @@ export default function RegisterPage() {
     useState(false);
 
   const [error, setError] = useState("");
+  const [globalError, setGlobalError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const passwordError = validatePassword(password);
@@ -124,22 +125,26 @@ export default function RegisterPage() {
           onSubmit={handleSubmit}
           className="flex flex-col gap-4 max-w-xl"
         >
-          <ErrorMessage
-            innerBtnText="Error"
-            innerBtnBgColour="bg-red-50"
-            innerBtnTextColour="text-red-700"
-            errorMessageText="There was a problem with that action"
-            backgroundColour="bg-red-100"
-            arrow={true}
-          />
-          <ErrorMessage
-            innerBtnText="Fix now"
-            innerBtnBgColour="bg-red-50"
-            innerBtnTextColour="text-red-700"
-            errorMessageText="There was a problem with that action"
-            backgroundColour="bg-red-100"
-            arrow={true}
-          />
+          {globalError && (
+            <ErrorMessage
+              innerBtnText="Error"
+              innerBtnBgColour="bg-red-50"
+              innerBtnTextColour="text-red-700"
+              errorMessageText="There was a problem with that action"
+              backgroundColour="bg-red-100"
+              arrow={true}
+            />
+          )}
+          {globalError && (
+            <ErrorMessage
+              innerBtnText="Fix now"
+              innerBtnBgColour="bg-red-600"
+              innerBtnTextColour="text-white"
+              errorMessageText="There was a problem with that action"
+              backgroundColour="bg-red-100"
+              arrow={true}
+            />
+          )}
           {error && (
             <p className="rounded-md bg-red-100 p-2 text-center text-error-500">
               {error}
