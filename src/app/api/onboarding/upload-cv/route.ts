@@ -41,7 +41,7 @@ export async function POST(req: Request) {
   await prisma.user.update({
     where: { id: parseInt(session.user.id) },
     data: {
-      onboardingStep: 8,
+      onboardingStep: 9,
     },
   });
 

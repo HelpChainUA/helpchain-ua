@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import ArrowRight from "@/icons/ArrowRight";
 import ArrowLeft from "@/icons/ArrowLeft";
+import LoadingSpinner from "@/icons/LoadingSpinner";
 import ProgressBar from "@/components/ProgressBar";
 import Select from "@/components/Select";
 import { XIcon } from "lucide-react";
@@ -13,27 +14,13 @@ type LanguageSkill = {
   levelId: string;
 };
 
-// const languageOptions = [
-//   { label: "English", value: "1" },
-//   { label: "Ukrainian", value: "2" },
-//   { label: "German", value: "3" },
-//   { label: "Spanish", value: "4" },
-//   { label: "French", value: "5" },
-// ];
-
-// const levelOptions = [
-//   { label: "Basic", value: "1" },
-//   { label: "Intermediate", value: "2" },
-//   { label: "Advanced", value: "3" },
-//   { label: "Fluent", value: "4" },
-// ];
-
 export default function LanguagePage() {
   const router = useRouter();
   const [languageSkills, setLanguageSkills] = useState<LanguageSkill[]>([
     { languageId: "", levelId: "" },
   ]);
   const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [languageOptions, setLanguageOptions] = useState<
     { label: string; value: string }[]
@@ -44,6 +31,7 @@ export default function LanguagePage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       try {
         const [langRes, levelRes, skillsRes] = await Promise.all([
           fetch("/api/meta/languages"),
@@ -70,6 +58,8 @@ export default function LanguagePage() {
         }
       } catch (error) {
         console.error("Failed to fetch language data", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -79,7 +69,7 @@ export default function LanguagePage() {
   const handleChange = (
     index: number,
     field: keyof LanguageSkill,
-    value: string
+    value: string,
   ) => {
     const updated = [...languageSkills];
     updated[index][field] = value;
@@ -123,7 +113,7 @@ export default function LanguagePage() {
     });
 
     if (res.ok) {
-      router.push("/onboarding/salary");
+      router.push("/onboarding/job-seeker/salary");
     } else {
       setError("Something went wrong");
     }
@@ -133,56 +123,70 @@ export default function LanguagePage() {
 
   return (
     <div className="min-h-[calc(100vh-100px)] flex flex-col bg-primary-50">
-      <ProgressBar percent={80} stepInfo="Step 8 of 10" />
+      <ProgressBar percent={82} stepInfo="Step 9 of 11" />
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 mb-10">
-        <h1 className="text-2xl font-bold mb-4 font-montserrat text-center">
-          Languages you can work in
-        </h1>
-        <p className="font-karla mb-10 text-center max-w-lg">
-          We’ll use this to match you with jobs requiring language skills.
-        </p>
-        {error && <p className="text-red-600">{error}</p>}
+        {isLoading ? (
+          <div className="flex flex-col items-center gap-3 text-gray-600">
+            <LoadingSpinner className="animate-spin" />
+            <p className="font-karla text-sm">Loading your language data...</p>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-2xl font-bold mb-4 font-montserrat text-center">
+              Languages you can work in
+            </h1>
+            <p className="font-karla mb-10 text-center max-w-lg">
+              We’ll use this to match you with jobs requiring language skills.
+            </p>
+            {error && <p className="text-red-600">{error}</p>}
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-6 w-auto sm:w-xl font-karla"
-        >
-          {languageSkills.map((skill, index) => (
-            <div key={index} className="flex flex-row wrap gap-2 items-center">
-              <Select
-                name={`language-${index}`}
-                value={skill.languageId}
-                onChange={(e) =>
-                  handleChange(index, "languageId", e.target.value)
-                }
-                placeholder="Select language"
-                options={languageOptions}
-              />
-              <Select
-                name={`level-${index}`}
-                value={skill.levelId}
-                onChange={(e) => handleChange(index, "levelId", e.target.value)}
-                placeholder="Select level"
-                options={levelOptions}
-              />
-              {languageSkills.length > 1 && (
-                <XIcon
-                  size={45}
-                  className="cursor-pointer hover:text-primary-700  text-primary-300"
-                  onClick={() => handleDelete(index)}
-                />
-              )}
-            </div>
-          ))}
-        </form>
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-6 w-auto sm:w-xl font-karla"
+            >
+              {languageSkills.map((skill, index) => (
+                <div
+                  key={index}
+                  className="flex flex-row wrap gap-2 items-center"
+                >
+                  <Select
+                    name={`language-${index}`}
+                    value={skill.languageId}
+                    onChange={(e) =>
+                      handleChange(index, "languageId", e.target.value)
+                    }
+                    placeholder="Select language"
+                    options={languageOptions}
+                  />
+                  <Select
+                    name={`level-${index}`}
+                    value={skill.levelId}
+                    onChange={(e) =>
+                      handleChange(index, "levelId", e.target.value)
+                    }
+                    placeholder="Select level"
+                    options={levelOptions}
+                  />
+                  {languageSkills.length > 1 && (
+                    <XIcon
+                      size={45}
+                      className="cursor-pointer hover:text-primary-700  text-primary-300"
+                      onClick={() => handleDelete(index)}
+                    />
+                  )}
+                </div>
+              ))}
+            </form>
+          </>
+        )}
       </main>
 
       <footer className="bg-white border-t-2 border-primary-300 py-4 px-4">
         <div className="max-w-xl mx-auto flex justify-center font-karla gap-4">
           <button
             type="button"
-            onClick={() => router.push("/onboarding/upload-cv")}
+            onClick={() => router.push("/onboarding/job-seeker/upload-cv")}
             className="px-4 py-2 rounded bg-white hover:bg-primary-200 text-primary-500 font-bold"
           >
             <div className="flex items-center gap-2 font-bold">
@@ -194,7 +198,7 @@ export default function LanguagePage() {
             type="submit"
             onClick={handleSubmit}
             className="w-auto rounded-md bg-primary-500 py-2 px-5 text-gray-25 hover:bg-primary-700 transition"
-            disabled={loading}
+            disabled={loading || isLoading}
           >
             {loading ? (
               "Saving..."

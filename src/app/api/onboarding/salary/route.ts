@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     where: { id: parseInt(session.user.id) },
     data: {
       salary: salaryExpectation,
-      onboardingStep: 10,
+      onboardingStep: 11,
     },
   });
 

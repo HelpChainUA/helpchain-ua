@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { EmploymentTypePreference, OpportunityType } from "@/generated/prisma";
 
 // GET: return profession data
 export async function GET() {
@@ -13,15 +14,17 @@ export async function GET() {
   const user = await prisma.user.findUnique({
     where: { id: parseInt(session.user.id) },
     select: {
-      currentRole: true,
-      desiredRole: true,
-      skills: true,
-      willingToRetrain: true,
-      willingToRelocate: true,
+      targetJobs: { select: { jobOptionId: true } },
+      opportunities: { select: { type: true } },
+      employmentTypes: { select: { type: true } },
     },
   });
 
-  return NextResponse.json(user);
+  return NextResponse.json({
+    targetJobs: user?.targetJobs.map((item) => item.jobOptionId) || [],
+    opportunities: user?.opportunities.map((item) => item.type) || [],
+    employmentTypes: user?.employmentTypes.map((item) => item.type) || [],
+  });
 }
 
 // POST: save profession data
@@ -31,22 +34,57 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const {
-    currentRole,
-    desiredRole,
-    selectedSkills,
-    willingToTrain,
-    willingToRelocate,
-  } = await req.json();
+  const { targetJobs, opportunities, employmentTypes } = await req.json();
+
+  const userId = parseInt(session.user.id);
+
+  await prisma.userJobOption.deleteMany({ where: { userId } });
+  await prisma.userOpportunity.deleteMany({ where: { userId } });
+  await prisma.userEmploymentType.deleteMany({ where: { userId } });
+
+  if (Array.isArray(targetJobs) && targetJobs.length > 0) {
+    const uniqueTargetJobs = Array.from(
+      new Set(targetJobs.filter((jobOptionId: string) => !!jobOptionId)),
+    );
+    await prisma.userJobOption.createMany({
+      data: uniqueTargetJobs.map((jobOptionId: string) => ({
+        userId,
+        jobOptionId,
+      })),
+    });
+  }
+
+  if (Array.isArray(opportunities) && opportunities.length > 0) {
+    const opportunityValues = Object.values(OpportunityType);
+    const validOpportunities = opportunities.filter(
+      (type: string): type is OpportunityType =>
+        opportunityValues.includes(type as OpportunityType),
+    );
+    await prisma.userOpportunity.createMany({
+      data: validOpportunities.map((type) => ({
+        userId,
+        type,
+      })),
+    });
+  }
+
+  if (Array.isArray(employmentTypes) && employmentTypes.length > 0) {
+    const employmentTypeValues = Object.values(EmploymentTypePreference);
+    const validEmploymentTypes = employmentTypes.filter(
+      (type: string): type is EmploymentTypePreference =>
+        employmentTypeValues.includes(type as EmploymentTypePreference),
+    );
+    await prisma.userEmploymentType.createMany({
+      data: validEmploymentTypes.map((type) => ({
+        userId,
+        type,
+      })),
+    });
+  }
 
   await prisma.user.update({
-    where: { id: parseInt(session.user.id) },
+    where: { id: userId },
     data: {
-      currentRole,
-      desiredRole,
-      skills: selectedSkills,
-      willingToRetrain: willingToTrain === "yes",
-      willingToRelocate: willingToRelocate === "yes",
       onboardingStep: 7,
     },
   });

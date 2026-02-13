@@ -31,7 +31,7 @@ export default function SalaryPage() {
 
       if (!res.ok) throw new Error("Failed to save");
 
-      router.push("/onboarding/thank-you");
+      router.push("/onboarding/job-seeker/thank-you");
     } catch (err) {
       console.error("Error saving salary:", err);
     } finally {
@@ -41,7 +41,7 @@ export default function SalaryPage() {
 
   return (
     <div className="min-h-[calc(100vh-100px)] flex flex-col bg-primary-50 ">
-      <ProgressBar percent={90} stepInfo="Step 9 of 10" />
+      <ProgressBar percent={91} stepInfo="Step 10 of 11" />
       <main className="flex-1 flex flex-col items-center justify-center p-6 max-w-2xl m-auto pb-10">
         {/* Title */}
         <h1 className="text-2xl font-bold mb-4 font-montserrat text-center">
@@ -81,7 +81,7 @@ export default function SalaryPage() {
         <div className="max-w-xl mx-auto flex justify-center font-karla gap-4">
           <button
             type="button"
-            onClick={() => router.push("/onboarding/language")}
+            onClick={() => router.push("/onboarding/job-seeker/language")}
             className="px-4 py-2 rounded bg-white hover:bg-primary-200 text-primary-500 font-bold"
           >
             <div className="flex items-center gap-2 font-bold">
