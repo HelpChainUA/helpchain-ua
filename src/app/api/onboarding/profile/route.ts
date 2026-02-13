@@ -13,8 +13,9 @@ export async function GET() {
     select: {
       firstName: true,
       lastName: true,
-      age: true,
+      ageRange: true,
       gender: true,
+      locationId: true,
     },
   });
 
@@ -26,17 +27,18 @@ export async function POST(req: Request) {
   if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { firstName, lastName, age, gender } = await req.json();
-  console.log("Received profile data:", { firstName, lastName });
+  const { firstName, lastName, ageRange, gender, locationId } = await req.json();
+  console.log("Received profile data:", { firstName, lastName, locationId });
 
   await prisma.user.update({
     where: { id: parseInt(session.user.id) },
     data: {
       firstName,
       lastName,
-      age,
+      ageRange,
       gender,
-      onboardingStep: 6,
+      locationId,
+      onboardingStep: 5,
     },
   });
 
