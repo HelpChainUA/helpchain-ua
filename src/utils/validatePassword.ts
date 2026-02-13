@@ -35,6 +35,20 @@ export function validatePassword(password: string): string | null {
   return null;
 }
 
+export function getPasswordChecks(password: string) {
+  const score = zxcvbn(password).score;
+
+  return {
+    minLength: password.length >= 8,
+    hasLowercase: /[a-z]/.test(password),
+    hasUppercase: /[A-Z]/.test(password),
+    hasNumber: /\d/.test(password),
+    hasSpecial: /[^A-Za-z0-9]/.test(password),
+    noSpaces: !/\s/.test(password),
+    strongEnough: score >= 3,
+  };
+}
+
 export function isPasswordValid(password: string): boolean {
   const strongRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,128}$/;

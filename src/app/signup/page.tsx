@@ -5,7 +5,11 @@ import { useState, useEffect } from "react";
 import validator from "validator";
 import { EyeOn, EyeOff, CheckMark, ArrowRight, ArrowLeft } from "@/icons/index";
 import SocialAuthButtons from "@/components/SocialAuthButtons";
-import { isPasswordValid, validatePassword } from "@/utils/validatePassword";
+import {
+  getPasswordChecks,
+  isPasswordValid,
+  validatePassword,
+} from "@/utils/validatePassword";
 import TextInput from "@/components/ui/TextInput/TextInput";
 import ProgressBar from "@/components/ProgressBar";
 import OnboardingFooter from "@/components/OnboardingFooter";
@@ -35,6 +39,20 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
 
   const passwordError = validatePassword(password);
+  const passwordChecks = getPasswordChecks(password);
+  const showPasswordRules = passwordFocused || password.length > 0;
+  const passwordRules = [
+    { label: "At least 8 characters", met: passwordChecks.minLength },
+    { label: "One uppercase letter (A-Z)", met: passwordChecks.hasUppercase },
+    { label: "One lowercase letter (a-z)", met: passwordChecks.hasLowercase },
+    { label: "One number (0-9)", met: passwordChecks.hasNumber },
+    {
+      label: "One special character (!@#$%^&*)",
+      met: passwordChecks.hasSpecial,
+    },
+    { label: "No spaces", met: passwordChecks.noSpaces },
+    { label: "Strong enough", met: passwordChecks.strongEnough },
+  ];
 
   useEffect(() => {
     // Clear error when password becomes valid and matches
@@ -179,11 +197,38 @@ export default function RegisterPage() {
                     ? passwordError
                     : undefined
               }
-              helperText="Enter a secure password: at least 8 characters, including upper-case and lower-case letters, numbers and special characters."
               showIconButton
               icon={showPassword ? <EyeOn /> : <EyeOff />}
               onIconButtonClick={handleShowPassword}
             />
+
+            {showPasswordRules && (
+              <div className="text-xs font-karla">
+                <p className="mb-2 font-bold text-gray-700">
+                  Password must contain:
+                </p>
+                <div className="grid gap-1">
+                  {passwordRules.map((rule) => (
+                    <div key={rule.label} className="flex items-center gap-2">
+                      <span
+                        className={`flex h-3 w-3 items-center justify-center rounded border ${
+                          rule.met
+                            ? "border-primary-500 bg-primary-50"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {rule.met ? <CheckMark className="h-2 w-2" /> : null}
+                      </span>
+                      <span
+                        className={rule.met ? "text-gray-700" : "text-gray-500"}
+                      >
+                        {rule.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Password confirmation input field*/}
             <TextInput
