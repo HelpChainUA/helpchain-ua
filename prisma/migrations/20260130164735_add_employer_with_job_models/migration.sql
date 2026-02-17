@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE `user` ADD COLUMN `phoneNumber` VARCHAR(191) NULL,
+ALTER TABLE `User` ADD COLUMN `phoneNumber` VARCHAR(191) NULL,
     ADD COLUMN `role` ENUM('JOB_SEEKER', 'EMPLOYER', 'PARTNER') NULL;
 
 -- CreateTable

@@ -1,10 +1,44 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserData } from "@/types/user";
+import {
+  AgeRange,
+  EmploymentTypePreference,
+  OpportunityType,
+  UserData,
+} from "@/types/user";
 import Image from "next/image";
 
-const mainCategories = ["Age", "Occupation", "Income", "Skills", "Location"];
+const mainCategories = [
+  "Age range",
+  "Target jobs",
+  "Income",
+  "Opportunities",
+  "Job search locations",
+];
+
+const ageRangeLabels: Record<AgeRange, string> = {
+  AGE_18_24: "18-24",
+  AGE_25_29: "25-29",
+  AGE_30_34: "30-34",
+  AGE_35_39: "35-39",
+  AGE_40_44: "40-44",
+  AGE_45_54: "45-54",
+  AGE_55_PLUS: "55+",
+};
+
+const opportunityLabels: Record<OpportunityType, string> = {
+  COURSES: "Courses",
+  ENGLISH_CLASSES: "English classes",
+  INTERNSHIPS: "Internships",
+  PAID_WORK_ONLY: "No, only paid work",
+};
+
+const employmentTypeLabels: Record<EmploymentTypePreference, string> = {
+  FULL_TIME: "Full-time",
+  PART_TIME: "Part-time",
+  BOTH_FLEXIBLE: "Both / Flexible",
+};
 
 export default function JobSeekerProfile() {
   const [user, setUser] = useState<UserData | null>(null);
@@ -47,15 +81,22 @@ export default function JobSeekerProfile() {
               ))}
             </ul>
             <ul className="flex flex-col gap-3 items-end">
-              <li>{user?.age}</li>
-              <li>{user?.desiredRole}</li>
+              <li>
+                {user?.ageRange ? ageRangeLabels[user.ageRange] : undefined}
+              </li>
+              <li>{user?.targetJobs?.join(", ")}</li>
               <li>{user?.salary}</li>
-              <ul>
-                {user?.skills?.map((skill, i) => (
-                  <li key={i}>{skill}</li>
-                ))}
-              </ul>
-              <li>{user?.city}</li>
+              <li>
+                {user?.opportunities
+                  ?.map((item) => opportunityLabels[item])
+                  .join(", ")}
+                {user?.employmentTypes && user.employmentTypes.length > 0
+                  ? ` (${user.employmentTypes
+                      .map((item) => employmentTypeLabels[item])
+                      .join(", ")})`
+                  : ""}
+              </li>
+              <li>{user?.jobSearchLocations?.join(", ")}</li>
             </ul>
           </div>
         </div>

@@ -16,6 +16,7 @@ interface MultiSelectProps {
   onChange: (name: string, values: string[]) => void;
   placeholder?: string;
   required?: boolean;
+  maxSelected?: number;
 }
 
 /**
@@ -53,6 +54,7 @@ interface MultiSelectProps {
  * @param {ReactNode} [labelTooltip] - Optional tooltip next to the label.
  * @param {string} [placeholder] - Optional placeholder shown when nothing selected.
  * @param {boolean} [required] - Whether the field is required.
+ * @param {number} [maxSelected] - Optional max selections; extra options are disabled once reached.
  *
  * @returns {JSX.Element} A styled multi-select dropdown with checkboxes.
  */
@@ -66,6 +68,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   onChange,
   placeholder = "Select options",
   required = false,
+  maxSelected,
 }) => {
   const [open, setOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
@@ -86,6 +89,14 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
   }, []);
 
   const toggleOption = (value: string) => {
+    if (
+      maxSelected !== undefined &&
+      maxSelected > 0 &&
+      values.length >= maxSelected &&
+      !values.includes(value)
+    ) {
+      return;
+    }
     const newValues = values.includes(value)
       ? values.filter((v) => v !== value)
       : [...values, value];
@@ -125,21 +136,34 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 
         {open && (
           <div className="absolute top-full left-0 right-0 bg-white shadow-md border border-gray-200 rounded-md mt-1 z-10 max-h-60 overflow-y-auto">
-            {options.map((option) => (
-              <label
-                key={option.value}
-                className="flex items-center px-4 py-2 hover:bg-primary-100 cursor-pointer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <input
-                  type="checkbox"
-                  checked={values.includes(option.value)}
-                  onChange={() => toggleOption(option.value)}
-                  className="mr-3 w-4 h-4 accent-primary-500"
-                />
-                <span className="text-base text-gray-900">{option.label}</span>
-              </label>
-            ))}
+            {options.map((option) => {
+              const isDisabled =
+                maxSelected !== undefined &&
+                maxSelected > 0 &&
+                values.length >= maxSelected &&
+                !values.includes(option.value);
+
+              return (
+                <label
+                  key={option.value}
+                  className={`flex items-center px-4 py-2 hover:bg-primary-100 cursor-pointer ${
+                    isDisabled ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <input
+                    type="checkbox"
+                    checked={values.includes(option.value)}
+                    onChange={() => toggleOption(option.value)}
+                    disabled={isDisabled}
+                    className="mr-3 w-4 h-4 accent-primary-500"
+                  />
+                  <span className="text-base text-gray-900">
+                    {option.label}
+                  </span>
+                </label>
+              );
+            })}
           </div>
         )}
       </div>

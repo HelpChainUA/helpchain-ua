@@ -12,6 +12,24 @@ export async function GET() {
 
   const user = await prisma.user.findUnique({
     where: { id: parseInt(session.user.id) },
+    select: {
+      firstName: true,
+      lastName: true,
+      onboardingStep: true,
+      ageRange: true,
+      willingToRelocate: true,
+      salary: true,
+      housingAssistancePreference: true,
+      targetJobs: { select: { jobOption: { select: { label: true } } } },
+      opportunities: { select: { type: true } },
+      employmentTypes: { select: { type: true } },
+      location: {
+        select: { city: true, country: true },
+      },
+      jobSearchLocations: {
+        select: { location: { select: { city: true, country: true } } },
+      },
+    },
   });
 
   return NextResponse.json({
@@ -19,11 +37,23 @@ export async function GET() {
     firstName: user?.firstName,
     lastName: user?.lastName,
     onboardingStep: user?.onboardingStep,
-    age: user?.age,
-    city: user?.city,
-    desiredRole: user?.desiredRole,
-    skills: user?.skills,
+    ageRange: user?.ageRange,
+    locationLabel: user?.location
+      ? `${user.location.city}, ${user.location.country}`
+      : undefined,
     willingToRelocate: user?.willingToRelocate,
+    housingAssistancePreference: user?.housingAssistancePreference,
+    targetJobs: user?.targetJobs.map((item) => item.jobOption.label) || [],
+    opportunities: user?.opportunities.map((item) => item.type) || [],
+    employmentTypes: user?.employmentTypes.map((item) => item.type) || [],
+    jobSearchLocations:
+      user?.jobSearchLocations
+        .map((item) =>
+          item.location
+            ? `${item.location.city}, ${item.location.country}`
+            : "",
+        )
+        .filter(Boolean) || [],
     salary: user?.salary,
   });
 }

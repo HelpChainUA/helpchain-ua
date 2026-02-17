@@ -80,37 +80,187 @@ async function main() {
     });
   }
 
-  // England Cities (Locations)
-  const cities = [
-    "London",
-    "Manchester",
-    "Birmingham",
-    "Liverpool",
-    "Leeds",
-    "Newcastle",
-    "Sheffield",
+  // UK Regions/Areas (Locations)
+  const englandCounties = [
+    "Bedfordshire",
+    "Berkshire",
     "Bristol",
-    "Nottingham",
-    "Leicester",
-    "Southampton",
-    "Brighton",
-    "Oxford",
-    "Cambridge",
-    "York",
-    "Coventry",
-    "Reading",
-    "Portsmouth",
-    "Plymouth",
-    "Derby",
+    "Buckinghamshire",
+    "Cambridgeshire",
+    "Cheshire",
+    "City of London",
+    "Cornwall",
+    "Cumbria",
+    "Derbyshire",
+    "Devon",
+    "Dorset",
+    "Durham",
+    "East Riding of Yorkshire",
+    "East Sussex",
+    "Essex",
+    "Gloucestershire",
+    "Greater London",
+    "Greater Manchester",
+    "Hampshire",
+    "Herefordshire",
+    "Hertfordshire",
+    "Isle of Wight",
+    "Kent",
+    "Lancashire",
+    "Leicestershire",
+    "Lincolnshire",
+    "Merseyside",
+    "Norfolk",
+    "North Yorkshire",
+    "Northamptonshire",
+    "Northumberland",
+    "Nottinghamshire",
+    "Oxfordshire",
+    "Rutland",
+    "Shropshire",
+    "Somerset",
+    "South Yorkshire",
+    "Staffordshire",
+    "Suffolk",
+    "Surrey",
+    "Tyne and Wear",
+    "Warwickshire",
+    "West Midlands",
+    "West Sussex",
+    "West Yorkshire",
+    "Wiltshire",
+    "Worcestershire",
   ];
 
-  for (const city of cities) {
-    await prisma.location.upsert({
-      where: { city_country: { city, country: "United Kingdom" } },
-      update: {},
-      create: { city, country: "United Kingdom" },
+  const scotlandCouncilAreas = [
+    "Aberdeen City",
+    "Aberdeenshire",
+    "Angus",
+    "Argyll and Bute",
+    "City of Edinburgh",
+    "Clackmannanshire",
+    "Dumfries and Galloway",
+    "Dundee City",
+    "East Ayrshire",
+    "East Dunbartonshire",
+    "East Lothian",
+    "East Renfrewshire",
+    "Falkirk",
+    "Fife",
+    "Glasgow City",
+    "Highland",
+    "Inverclyde",
+    "Midlothian",
+    "Moray",
+    "Na h-Eileanan Siar",
+    "North Ayrshire",
+    "North Lanarkshire",
+    "Orkney Islands",
+    "Perth and Kinross",
+    "Renfrewshire",
+    "Scottish Borders",
+    "Shetland Islands",
+    "South Ayrshire",
+    "South Lanarkshire",
+    "Stirling",
+    "West Dunbartonshire",
+    "West Lothian",
+  ];
+
+  const walesPrincipalAreas = [
+    "Blaenau Gwent",
+    "Bridgend",
+    "Caerphilly",
+    "Cardiff",
+    "Carmarthenshire",
+    "Ceredigion",
+    "Conwy",
+    "Denbighshire",
+    "Flintshire",
+    "Gwynedd",
+    "Isle of Anglesey",
+    "Merthyr Tydfil",
+    "Monmouthshire",
+    "Neath Port Talbot",
+    "Newport",
+    "Pembrokeshire",
+    "Powys",
+    "Rhondda Cynon Taf",
+    "Swansea",
+    "Torfaen",
+    "Vale of Glamorgan",
+    "Wrexham",
+  ];
+
+  const northernIrelandDistricts = [
+    "Antrim and Newtownabbey",
+    "Ards and North Down",
+    "Armagh City, Banbridge and Craigavon",
+    "Belfast",
+    "Causeway Coast and Glens",
+    "Derry City and Strabane",
+    "Fermanagh and Omagh",
+    "Lisburn and Castlereagh",
+    "Mid and East Antrim",
+    "Mid Ulster",
+    "Newry, Mourne and Down",
+  ];
+
+  const regionGroups = [
+    { country: "England", regions: englandCounties },
+    { country: "Scotland", regions: scotlandCouncilAreas },
+    { country: "Wales", regions: walesPrincipalAreas },
+    { country: "Northern Ireland", regions: northernIrelandDistricts },
+  ];
+
+  for (const group of regionGroups) {
+    for (const region of group.regions) {
+      await prisma.location.upsert({
+        where: { city_country: { city: region, country: group.country } },
+        update: {},
+        create: { city: region, country: group.country },
+      });
+    }
+  }
+
+  // Job Options
+  const jobOptions = [
+    { slug: "caregiver", label: "Caregiver" },
+    { slug: "cleaner", label: "Cleaner" },
+    { slug: "warehouse-operative", label: "Warehouse Operative" },
+    { slug: "warehouse-picker-packer", label: "Warehouse Picker / Packer" },
+    { slug: "forklift-operator", label: "Forklift Operator" },
+    { slug: "driver-delivery", label: "Driver / Delivery" },
+    { slug: "construction-labourer", label: "Construction / Labourer" },
+    { slug: "hospitality-hotel", label: "Hospitality / Hotel" },
+    { slug: "kitchen-restaurant", label: "Kitchen / Restaurant" },
+    { slug: "chef-cook", label: "Chef / Cook" },
+    { slug: "barista", label: "Barista" },
+    { slug: "retail", label: "Retail" },
+    { slug: "sales-assistant", label: "Sales Assistant" },
+    { slug: "office-admin", label: "Office / Admin" },
+    { slug: "receptionist", label: "Receptionist" },
+    { slug: "customer-service", label: "Customer Service" },
+    { slug: "it-tech", label: "IT / Tech" },
+    { slug: "education-teaching", label: "Education / Teaching" },
+    { slug: "healthcare-assistant", label: "Healthcare Assistant" },
+    { slug: "support-worker", label: "Support Worker" },
+    { slug: "security-guard", label: "Security Guard" },
+    { slug: "maintenance-handyman", label: "Maintenance / Handyman" },
+    { slug: "manufacturing-operative", label: "Manufacturing Operative" },
+    { slug: "logistics-coordinator", label: "Logistics Coordinator" },
+    { slug: "childcare-nursery", label: "Childcare / Nursery" },
+    { slug: "hair-beauty", label: "Hair & Beauty" },
+  ];
+
+  for (const option of jobOptions) {
+    await prisma.jobOption.upsert({
+      where: { slug: option.slug },
+      update: { label: option.label },
+      create: option,
     });
   }
+
   // Job Types
   const jobTypes = [
     { name: "PAID_JOB", displayName: "Paid Job" },

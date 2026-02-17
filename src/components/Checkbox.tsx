@@ -69,7 +69,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
           type === "round" ? "" : "rounded"
         }`}
       />
-      <span className="text-base text-gray-900">{label}</span>
+      <span className="text-base text-gray-600">{label}</span>
     </label>
   );
 };

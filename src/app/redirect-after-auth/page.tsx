@@ -42,19 +42,19 @@ export default async function RedirectAfterAuthPage() {
 
   // Default: Job Seeker onboarding
   const stepToPathMap: Record<number, string> = {
-    4: "/onboarding/location",
-    5: "/onboarding/profile",
-    6: "/onboarding/profession",
-    7: "/onboarding/upload-cv",
-    8: "/onboarding/language",
-    9: "/onboarding/salary",
-    10: "/onboarding/thank-you",
+    4: "/onboarding/job-seeker/profile",
+    5: "/onboarding/job-seeker/job-location",
+    6: "/onboarding/job-seeker/profession",
+    7: "/onboarding/job-seeker/work-experience",
+    8: "/onboarding/job-seeker/upload-cv",
+    9: "/onboarding/job-seeker/language",
+    10: "/onboarding/job-seeker/salary",
   };
 
   const onboardingStep = user.onboardingStep;
 
   // If onboarding is completed, send to home page
-  if (onboardingStep >= 10) {
+  if (onboardingStep >= 11) {
     return redirect("/");
   }
 

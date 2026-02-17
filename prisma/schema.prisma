@@ -20,6 +20,45 @@ enum HousingAssistance {
   POSSIBLE
 }
 
+enum HousingAssistancePreference {
+  NO
+  JOB_WITH_HOUSING_ONLY
+  NEED_HELP_MOVING
+  CONSIDERING_OPTIONS
+}
+
+
+enum OpportunityType {
+  COURSES
+  ENGLISH_CLASSES
+  INTERNSHIPS
+  PAID_WORK_ONLY
+}
+
+enum EmploymentTypePreference {
+  FULL_TIME
+  PART_TIME
+  BOTH_FLEXIBLE
+}
+
+enum ExperienceRange {
+  YEARS_0_1
+  YEARS_1_2
+  YEARS_3_5
+  YEARS_6_10
+  YEARS_10_PLUS
+}
+
+enum AgeRange {
+  AGE_18_24
+  AGE_25_29
+  AGE_30_34
+  AGE_35_39
+  AGE_40_44
+  AGE_45_54
+  AGE_55_PLUS
+}
+
 model Language {
   id       Int    @id @default(autoincrement())
   name     String
@@ -44,13 +83,93 @@ model UserLangLevel {
   @@id([userId, languageId]) // композитний ключ
 }
 
+model UserJobLocation {
+  userId     Int
+  locationId String
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@id([userId, locationId])
+}
+
+model JobOption {
+  id               String             @id @default(cuid())
+  slug             String             @unique
+  label            String
+  createdAt        DateTime           @default(now())
+  userJobOptions   UserJobOption[]
+  companyJobOptions CompanyJobOption[]
+  vacancyJobOptions VacancyJobOption[]
+  workExperiences  UserWorkExperience[]
+}
+
+model UserWorkExperience {
+  userId       Int
+  jobOptionId  String
+  yearsRange   ExperienceRange
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobOption    JobOption @relation(fields: [jobOptionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, jobOptionId])
+}
+
+model UserJobOption {
+  userId       Int
+  jobOptionId  String
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobOption    JobOption @relation(fields: [jobOptionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, jobOptionId])
+}
+
+model CompanyJobOption {
+  companyId    String
+  jobOptionId  String
+
+  company      Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  jobOption    JobOption @relation(fields: [jobOptionId], references: [id], onDelete: Cascade)
+
+  @@id([companyId, jobOptionId])
+}
+
+model VacancyJobOption {
+  jobId        String
+  jobOptionId  String
+
+  job          Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  jobOption    JobOption @relation(fields: [jobOptionId], references: [id], onDelete: Cascade)
+
+  @@id([jobId, jobOptionId])
+}
+
+model UserOpportunity {
+  userId Int
+  type   OpportunityType
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, type])
+}
+
+model UserEmploymentType {
+  userId Int
+  type   EmploymentTypePreference
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, type])
+}
+
 model User {
   id                 Int       @id @default(autoincrement())
   name               String?
   email              String    @unique
   emailVerified      DateTime?
   password           String?
-  city               String?
+  locationId         String?
   onboardingStep     Int       @default(1)
   image              String?
   createdAt          DateTime  @default(now())
@@ -66,16 +185,21 @@ model User {
   // Profile fields
   firstName          String?
   lastName           String?
-  age                Int?
+  ageRange           AgeRange?
   gender             String?
   currentRole        String?
   desiredRole        String?
   skills             Json?
   willingToRetrain   Boolean?  @default(false)
   willingToRelocate  Boolean?  @default(false)
+  housingAssistancePreference HousingAssistancePreference?
+  targetJobs         UserJobOption[]
+  workExperiences    UserWorkExperience[]
+  opportunities      UserOpportunity[]
+  employmentTypes    UserEmploymentType[]
 
   languageSkills     Json?
-  preferredLanguage  Json?
+  workExperienceSummary String? @db.Text
   salary             String?
 
   accounts           Account[]
@@ -83,6 +207,8 @@ model User {
   cvs                Cv[]
   languages          UserLangLevel[]
   company            Company?
+  location           Location? @relation(fields: [locationId], references: [id])
+  jobSearchLocations UserJobLocation[]
 }
 
 model Account {
@@ -144,6 +270,7 @@ model Company {
   industries              CompanyIndustry[]
   locations               CompanyLocation[]
   jobs                    Job[]
+  jobOptions              CompanyJobOption[]
   
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
@@ -177,6 +304,8 @@ model Location {
   
   companyLocations  CompanyLocation[]
   jobs              Job[]
+  users             User[]
+  jobSearchUsers     UserJobLocation[]
   
   @@unique([city, country])
 }
@@ -229,6 +358,7 @@ model Job {
   housingAssistance HousingAssistance
   workTypeId        String?
   workType          WorkType? @relation(fields: [workTypeId], references: [id]) // one-to-many
+  jobOptions        VacancyJobOption[]
   
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
